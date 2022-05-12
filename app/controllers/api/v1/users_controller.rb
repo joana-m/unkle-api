@@ -6,4 +6,11 @@ class Api::V1::UsersController < Api::V1::BaseController
   def index
     @users = policy_scope(User)
   end
+
+  def destroy
+    @user = User.find(params[:id])
+    authorize @user
+    @user.destroy
+    render json: { message: "User deleted." }
+  end
 end
