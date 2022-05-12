@@ -13,11 +13,15 @@ class ApplicationPolicy
   end
 
   def show?
-    false
+    if user.admin?
+      true
+    else
+      record.user.id == user.id
+    end
   end
 
   def create?
-    @user.admin?
+    user.admin?
   end
 
   def new?
