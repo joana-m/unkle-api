@@ -5,7 +5,9 @@ Rails.application.routes.draw do
     namespace :v1 do
       root to: 'pages#home'
       resources :users, only: [:index, :destroy]
-      resources :contrats, only: [:create]
+      resources :contrats, only: [:create] do
+        resources :contrat_clients
+      end
     end
   end
 end
