@@ -10,10 +10,45 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_12_023859) do
+ActiveRecord::Schema.define(version: 2022_05_12_025759) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "contrat_clients", force: :cascade do |t|
+    t.string "numero"
+    t.string "statut"
+    t.date "date_de_debut"
+    t.date "date_de_fin"
+    t.bigint "contrat_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["contrat_id"], name: "index_contrat_clients_on_contrat_id"
+    t.index ["user_id"], name: "index_contrat_clients_on_user_id"
+  end
+
+  create_table "contrat_options", force: :cascade do |t|
+    t.bigint "option_id", null: false
+    t.bigint "contrat_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["contrat_id"], name: "index_contrat_options_on_contrat_id"
+    t.index ["option_id"], name: "index_contrat_options_on_option_id"
+  end
+
+  create_table "contrats", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "options", force: :cascade do |t|
+    t.string "categorie"
+    t.string "description"
+    t.string "identifiant"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -30,4 +65,8 @@ ActiveRecord::Schema.define(version: 2022_05_12_023859) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "contrat_clients", "contrats"
+  add_foreign_key "contrat_clients", "users"
+  add_foreign_key "contrat_options", "contrats"
+  add_foreign_key "contrat_options", "options"
 end
