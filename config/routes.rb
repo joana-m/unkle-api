@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
       root to: 'pages#home'
-      # resources :contract, only: [ :index ]
+      resources :users, only: [ :index, :destroy ]
     end
   end
 end
