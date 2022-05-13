@@ -10,8 +10,8 @@ User.destroy_all
 Contrat.destroy_all
 Option.destroy_all
 
-joana = User.create(email: 'joana@gmail.com', password: '123456', admin: true)
-john = User.create(email: 'john@gmail.com', password: '123456', admin: false)
+joana = User.create(email: 'joana@gmail.com', password: '123456', admin: true, authentication_token: "FFaXt_etA37V4WrzKoEZ")
+john = User.create(email: 'john@gmail.com', password: '123456', admin: false, authentication_token: "TZzRFA_LoNkxv-jJwfNC")
 chris = User.create(email: 'chris@gmail.com', password: '123456', admin: false)
 dan = User.create(email: 'dan@gmail.com', password: '123456', admin: false)
 
