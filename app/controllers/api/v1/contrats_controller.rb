@@ -3,29 +3,39 @@ class Api::V1::ContratsController < Api::V1::BaseController
 
   def create
     @contrat = Contrat.new
+    authorize @contrat, policy_class: ApplicationPolicy
 
-    contrat_options = params[:options].map(&:to_i)
+    combinaison_choisie = params[:contrat][:options]
 
-    combinaisons_existantes = Contrat.all
-    combinaison_choisie = contrat_options
+    if !(combinaison_choisie.nil?)
 
-    # Vérification de l'unicité du contrat
-    option_uniqueness = true
-
-    combinaisons_existantes.each do |combinaison|
-      option_uniqueness = false if combinaison.options.pluck(:id).sort == combinaison_choisie.sort
-    end
-
-    if option_uniqueness
-      authorize @contrat, policy_class: ApplicationPolicy
-      @contrat.save
-      contrat_options.each do |option|
-        option.to_i
-        ContratOption.create(contrat_id: @contrat.id, option_id: option)
+      combinaison_choisie.map! do |id|
+        ContratOption.new(contrat: @contrat, option_id: id)
       end
-      render json: { statut: :ok, message: "Le contrat a bien été créé." }
+
+      # Vérification de l'unicité du contrat
+      combinaisons_existantes = Contrat.all
+      option_uniqueness = true
+
+      combinaisons_existantes.each do |combinaison|
+        option_uniqueness = false if combinaison.options.pluck(:id).sort == combinaison_choisie.sort
+      end
+
+      if option_uniqueness
+        @contrat.save
+        render json: { statut: :ok, message: "Le contrat a bien été créé." }
+      else
+        render json: { status: :unprocessable_entity }
+      end
+
     else
-      render_error
+      render json: { status: :unprocessable_entity }
     end
+  end
+
+  private
+
+  def contrat_params
+    params.require(:contrat).permit(options: [])
   end
 end
