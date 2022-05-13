@@ -12,11 +12,11 @@ class Api::V1::ContratClientsController < Api::V1::BaseController
   def create
     @contrat_client = ContratClient.new(contrat_client_params)
     contrat = Contrat.find(params[:contrat_id])
-    @contrat_client.contrat = contrat
+    @contrat_client.contrat_id = contrat.id
     user = User.find_by(email: request.headers["X-User-Email"])
 
     # Vérification que l'option n'a pas déjà été souscrite
-    uniqueness = option_uniqueness(user, contrat)
+    uniqueness = option_uniqueness(user, @contrat_client)
 
     @contrat_client.user_id = user.id
     authorize @contrat_client
@@ -58,12 +58,12 @@ class Api::V1::ContratClientsController < Api::V1::BaseController
 
   def option_uniqueness(user, contrat)
     options_deja_souscrites = user.options.pluck(:id)
-    options_choisies = contrat.options.pluck(:id)
-
+    options_choisies = contrat.contrat.options.pluck(:id)
     uniqueness = true
     options_choisies.each do |option|
       uniqueness = false if options_deja_souscrites.include? option
     end
+    return uniqueness
   end
 
   def set_contrat_client
