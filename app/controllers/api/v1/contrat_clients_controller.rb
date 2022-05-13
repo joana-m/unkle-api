@@ -32,6 +32,19 @@ class Api::V1::ContratClientsController < Api::V1::BaseController
     end
   end
 
+  #Résiliation du contrat
+  def update
+    @contrat_client = ContratClient.find(params[:id])
+    authorize @contrat_client
+    @contrat_client.update!(date_de_fin_params)
+    statut(@contrat_client)
+    if @contrat_client.save
+      render json: { message: "Vous avez bien modifié la date de fin du contrat #{@contrat_client.numero} au #{@contrat_client.date_de_fin}" }
+    else
+      render json: { status: :unprocessable_entity }
+    end
+  end
+
   private
 
   def statut(contrat_client)
@@ -49,7 +62,6 @@ class Api::V1::ContratClientsController < Api::V1::BaseController
     options_choisies = contrat.options.pluck(:id)
 
     uniqueness = true
-
     options_choisies.each do |option|
       uniqueness = false if options_deja_souscrites.include? option
     end
@@ -62,5 +74,9 @@ class Api::V1::ContratClientsController < Api::V1::BaseController
 
   def contrat_client_params
     params.require(:contrat_client).permit(:date_de_debut, :date_de_fin)
+  end
+
+  def date_de_fin_params
+    params.require(:contrat_client).permit(:date_de_fin)
   end
 end

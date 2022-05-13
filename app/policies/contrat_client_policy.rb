@@ -12,4 +12,8 @@ class ContratClientPolicy < ApplicationPolicy
   def create?
     record.user_id == user.id
   end
+
+  def update?
+    user.admin? || record.user_id == user.id
+  end
 end
