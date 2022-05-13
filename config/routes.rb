@@ -6,7 +6,7 @@ Rails.application.routes.draw do
       root to: 'pages#home'
       resources :users, only: [:index, :destroy]
       resources :contrats, only: [:create] do
-        resources :contrat_clients, only: [:index, :show]
+        resources :contrat_clients, only: [:index, :show, :create]
       end
     end
   end

@@ -8,4 +8,8 @@ class ContratClientPolicy < ApplicationPolicy
       end
     end
   end
+
+  def create?
+    record.user_id == user.id
+  end
 end

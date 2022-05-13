@@ -9,6 +9,14 @@ class Api::V1::BaseController < ActionController::API
 
   private
 
+  def json_response(record, message)
+    if record.save
+      render json: { message: message }
+    else
+      render json: { status: :unprocessable_entity }
+    end
+  end
+
   def user_not_authorized(exception)
     render json: {
       error: "Unauthorized #{exception.policy.class.to_s.underscore.camelize}.#{exception.query}"
