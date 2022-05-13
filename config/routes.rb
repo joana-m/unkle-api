@@ -1,3 +1,5 @@
+require "sidekiq/web"
+
 Rails.application.routes.draw do
   devise_for :users, controllers: { registrations: "registrations" }
 
@@ -9,5 +11,10 @@ Rails.application.routes.draw do
         resources :contrat_clients, only: [:index, :show, :create, :update]
       end
     end
+  end
+
+  # Sidekiq Web UI, only for admins.
+  authenticate :user, ->(user) { user.admin? } do
+    mount Sidekiq::Web => '/sidekiq'
   end
 end

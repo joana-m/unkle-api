@@ -8,6 +8,11 @@ class ContratClient < ApplicationRecord
   validates :date_de_debut, presence: true
   validate :date_de_fin_ne_peut_etre_dans_le_passe, :date_de_fin_ne_peut_etre_avant_la_date_de_debut
 
+  #Sidekiq
+  after_commit :async_update
+
+  private
+
   def date_de_fin_ne_peut_etre_dans_le_passe
     if !date_de_fin.nil? && date_de_fin < Date.today
       errors.add(:date_de_fin, "La date de fin ne peut être dans le passé.")
@@ -18,5 +23,9 @@ class ContratClient < ApplicationRecord
     if !date_de_fin.nil? && date_de_fin < date_de_debut
       errors.add(:date_de_fin, "La date de fin ne peut être avant la date de début.")
     end
+  end
+
+  def async_update
+    UpdateDateJob.set(wait_until: date_de_fin.to_time).perform_later(self) unless date_de_fin.nil?
   end
 end

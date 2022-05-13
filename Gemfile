@@ -66,3 +66,5 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'devise'
 gem 'pundit'
 gem 'simple_token_authentication'
+gem 'sidekiq'
+gem 'sidekiq-failures', '~> 1.0'
