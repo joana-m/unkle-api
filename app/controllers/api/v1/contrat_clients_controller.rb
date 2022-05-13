@@ -1,6 +1,6 @@
 class Api::V1::ContratClientsController < Api::V1::BaseController
   acts_as_token_authentication_handler_for User
-  before_action :set_contrat_client, only: [ :show ]
+  before_action :set_contrat_client, only: [:show]
 
   def index
     @contrat_clients = policy_scope(ContratClient)
@@ -22,7 +22,6 @@ class Api::V1::ContratClientsController < Api::V1::BaseController
     authorize @contrat_client
 
     if uniqueness
-      @contrat_client.save
       statut(@contrat_client)
       @contrat_client.numero = "#{user.id}#{@contrat_client.contrat_id}FR"
       @contrat_client.save
@@ -32,14 +31,14 @@ class Api::V1::ContratClientsController < Api::V1::BaseController
     end
   end
 
-  #Résiliation du contrat
+  # Résiliation du contrat
   def update
     @contrat_client = ContratClient.find(params[:id])
     authorize @contrat_client
     @contrat_client.update!(date_de_fin_params)
     statut(@contrat_client)
     if @contrat_client.save
-      render json: { message: "Vous avez bien modifié la date de fin du contrat #{@contrat_client.numero} au #{@contrat_client.date_de_fin}" }
+      render json: { status: :ok, message: "Vous avez bien modifié la date de fin du contrat #{@contrat_client.numero} au #{@contrat_client.date_de_fin}" }
     else
       render json: { status: :unprocessable_entity }
     end

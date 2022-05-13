@@ -11,6 +11,6 @@ class Api::V1::UsersController < Api::V1::BaseController
     @user = User.find(params[:id])
     authorize @user
     @user.destroy
-    render json: { message: "User supprimé." }
+    render json: { status: :ok, message: "User supprimé." }
   end
 end

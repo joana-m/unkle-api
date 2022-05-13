@@ -1,7 +1,7 @@
-#Ce controller permet de prendre en compte les autorisations pour créer un compte utilisateur
+# Ce controller permet de prendre en compte les autorisations pour créer un compte utilisateur
 
 class RegistrationsController < Devise::RegistrationsController
-  skip_before_action :require_no_authentication, only: [:new, :create]
+  skip_before_action :require_no_authentication, only: %i[new create]
 
   def new
     authorize User

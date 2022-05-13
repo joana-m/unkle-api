@@ -9,8 +9,7 @@ class Api::V1::ContratsController < Api::V1::BaseController
     combinaisons_existantes = Contrat.all
     combinaison_choisie = contrat_options
 
-    #Vérification de l'unicité du contrat
-
+    # Vérification de l'unicité du contrat
     option_uniqueness = true
 
     combinaisons_existantes.each do |combinaison|
@@ -24,7 +23,7 @@ class Api::V1::ContratsController < Api::V1::BaseController
         option.to_i
         ContratOption.create(contrat_id: @contrat.id, option_id: option)
       end
-      render json: { status: :created }
+      render json: { statut: :ok, message: "Le contrat a bien été créé." }
     else
       render_error
     end
